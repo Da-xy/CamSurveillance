@@ -11,6 +11,8 @@
 import processing.video.*; // Bibliotheque de controle camera
 import processing.sound.*;
 
+import beads.*;
+import org.jaudiolibs.beads.*;
 
 // Parametres de taille de la capture video
 final int widthCapture=640;  // largeur capture
