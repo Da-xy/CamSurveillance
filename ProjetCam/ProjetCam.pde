@@ -33,6 +33,8 @@ PImage imagePrecedente = null;
 PImage imageActuelle = null;
 PImage differenceDesDeuxImages;
 
+AudioContext ac;
+
 float precisionDePresence;
 
 boolean flagZic = true;
@@ -47,7 +49,12 @@ void setup() {
   noFill(); // pas de remplissage
   stroke(rouge); // couleur pourtour RGB - noStroke() si pas de pourtour
   background(noir); // couleur fond fenetre
-
+  
+  SamplePlayer player = new SamplePlayer(ac, SampleManager.sample("C:\\Users\\Dgeyd\\Documents\\GitHub\\camProject\\ProjetCam\\data\\alarme.mp3"));
+  Gain g = new Gain(ac, 2, 0.2);
+  g.addInput(player);
+  ac.out.addInput(g);
+  
   differenceDesDeuxImages = new PImage(widthCapture, heightCapture);
   
   precisionDePresence = 0.20;
@@ -114,6 +121,7 @@ void draw() {
       imagePrecedente = imageActuelle.get();
       image(differenceDesDeuxImages, 0, 0); // Restitution de l'image captee sur la webCam
       if(compteurPresence/(float)(widthCapture*heightCapture)>=precisionDePresence && flagZic){
+         ac.start();
          flagZic = false;
          println(compteurPresence/(float)(widthCapture*heightCapture));
       }
