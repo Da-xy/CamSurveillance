@@ -9,7 +9,6 @@
 
 // Importation des librairies
 import processing.video.*; // Bibliotheque de controle camera
-import processing.sound.*;
 
 import beads.*;
 import org.jaudiolibs.beads.*;
@@ -33,7 +32,6 @@ Capture webCam;      // Declaration de la Capture par Camera
 PImage imagePrecedente = null;
 PImage imageActuelle = null;
 PImage differenceDesDeuxImages;
-SoundFile alarme;
 
 float precisionDePresence;
 
@@ -54,7 +52,6 @@ void setup() {
   
   precisionDePresence = 0.20;
   
-  alarme = new SoundFile(this, "alarme.mp3");
   // Recherche d'une webcam 
   cameras = Capture.list();
   if (cameras.length == 0) {
@@ -117,7 +114,6 @@ void draw() {
       imagePrecedente = imageActuelle.get();
       image(differenceDesDeuxImages, 0, 0); // Restitution de l'image captee sur la webCam
       if(compteurPresence/(float)(widthCapture*heightCapture)>=precisionDePresence && flagZic){
-         alarme.play();
          flagZic = false;
          println(compteurPresence/(float)(widthCapture*heightCapture));
       }
