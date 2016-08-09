@@ -6,3 +6,5 @@ them with Processing 3 to find the movement. If the movement is enough (more tha
 Processing libraries used :
 - Video (video capture)
 - Sound (not supported by the Pi, gonna try with beads)
+
+D.
