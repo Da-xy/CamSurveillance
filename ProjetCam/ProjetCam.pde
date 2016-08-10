@@ -7,6 +7,8 @@
 /* Exemple_4_WebCam_Point_Vert.pde                       Processing 3.0     */
 /****************************************************************************/
 
+
+
 // Importation des librairies
 import processing.video.*; // Bibliotheque de controle camera
 
@@ -33,6 +35,7 @@ PImage imagePrecedente = null;
 PImage imageActuelle = null;
 PImage differenceDesDeuxImages;
 
+
 AudioContext ac;
 
 float precisionDePresence;
@@ -50,9 +53,11 @@ void setup() {
   stroke(rouge); // couleur pourtour RGB - noStroke() si pas de pourtour
   background(noir); // couleur fond fenetre
   
+
   
   ac = new AudioContext();
   SamplePlayer player = new SamplePlayer(ac, SampleManager.sample("C:\\Users\\Dgeyd\\Documents\\GitHub\\camProject\\ProjetCam\\data\\alarme.mp3"));
+  //SamplePlayer player = new SamplePlayer(ac, SampleManager.sample("/home/pi/git/camProject/ProjetCam/data/alarme.mp3"));
   Gain g = new Gain(ac, 2, 0.2);
   g.addInput(player);
   ac.out.addInput(g);
@@ -80,7 +85,7 @@ void draw() {
   color currColorPrece, currColorActu; // Couleur du pixel courant...
   int Rprece, Gprece, Bprece, Ractu, Gactu, Bactu; // equivalente a cette forme sous 3 composantes couleurs
   
-  int erreur = 50;
+  int erreur = 50; // Pour éviter qu'il y ait trop d'erreurs dans l'approximation du pixel on met une erreur de 50 dans la couleur.
   
   int compteurPresence = 0;
 
@@ -122,9 +127,13 @@ void draw() {
       }
       imagePrecedente = imageActuelle.get();
       image(differenceDesDeuxImages, 0, 0); // Restitution de l'image captee sur la webCam
-      if(compteurPresence/(float)(widthCapture*heightCapture)>=precisionDePresence && !ac.isRunning()){
-         ac.start();
+      if(compteurPresence/(float)(widthCapture*heightCapture)>=precisionDePresence && !ac.isRunning()){ // Test si on a une proportion de pixel changé supérieur à 5% et on vérifie que le son ne fonctionne pas déjà
+         ac.start(); // Démarrage son
          println(compteurPresence/(float)(widthCapture*heightCapture));
+      }
+      if(ac.getTime()>=5000){ // Après 5 sec d'alarme on coupe le son et on reset.
+        ac.stop();
+        ac.reset();
       }
     }
     else { // Première fois dans la boucle, l'image précédente n'est pas initialisée donc on refait un tour de boucle
@@ -151,7 +160,7 @@ void imageMirroir(PImage image) {
          image.pixels[ligne - 1 - x] = sauvegardePixel;
          image.updatePixels();
        }
-       else {
+       else { //<>//
          image.loadPixels();
          sauvegardePixel = image.pixels[x];
          image.pixels[x] = image.pixels[w - 1 - x];
