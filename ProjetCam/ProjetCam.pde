@@ -50,6 +50,8 @@ void setup() {
   stroke(rouge); // couleur pourtour RGB - noStroke() si pas de pourtour
   background(noir); // couleur fond fenetre
   
+  
+  ac = new AudioContext();
   SamplePlayer player = new SamplePlayer(ac, SampleManager.sample("C:\\Users\\Dgeyd\\Documents\\GitHub\\camProject\\ProjetCam\\data\\alarme.mp3"));
   Gain g = new Gain(ac, 2, 0.2);
   g.addInput(player);
@@ -57,7 +59,7 @@ void setup() {
   
   differenceDesDeuxImages = new PImage(widthCapture, heightCapture);
   
-  precisionDePresence = 0.20;
+  precisionDePresence = 0.05;
   
   // Recherche d'une webcam 
   cameras = Capture.list();
@@ -66,8 +68,8 @@ void setup() {
     exit();
   } else {
     // Initialisation de la webcam Video par defaut
-    //webCam = new Capture(this, widthCapture, heightCapture, cameras[0], fpsCapture);
-    webCam = new Capture(this, widthCapture, heightCapture, "QuickCam for Notebooks Deluxe", fpsCapture);
+    webCam = new Capture(this, widthCapture, heightCapture, cameras[0], fpsCapture);
+    //webCam = new Capture(this, widthCapture, heightCapture, "QuickCam for Notebooks Deluxe", fpsCapture);
     webCam.start(); // Mise en marche de la webCam
   }
 } // Fin de Setup
@@ -120,9 +122,8 @@ void draw() {
       }
       imagePrecedente = imageActuelle.get();
       image(differenceDesDeuxImages, 0, 0); // Restitution de l'image captee sur la webCam
-      if(compteurPresence/(float)(widthCapture*heightCapture)>=precisionDePresence && flagZic){
+      if(compteurPresence/(float)(widthCapture*heightCapture)>=precisionDePresence && !ac.isRunning()){
          ac.start();
-         flagZic = false;
          println(compteurPresence/(float)(widthCapture*heightCapture));
       }
     }
